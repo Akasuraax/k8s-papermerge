@@ -13,7 +13,9 @@ stringData:
   PAPERMERGE_REDIS_URL: redis://papermerge-redis:6379/0
   PAPERMERGE_S3_WORKER_S3_BUCKET_NAME: papermerge
   ARGS: "-Q s3,s3preview -c 2"
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -39,5 +41,4 @@ spec:
               mountPath: /var/media/pmg
       volumes:
         - name: media-storage
-          persistentVolumeClaim:
-            claimName: media-pvc
+          emptyDir: {}
