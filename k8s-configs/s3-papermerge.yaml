@@ -41,4 +41,34 @@ spec:
               mountPath: /var/media/pmg
       volumes:
         - name: media-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: s3-media-pvc
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: s3-media-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /mnt/data/papermerge-media
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: s3-media-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: standard 
