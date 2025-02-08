@@ -53,7 +53,7 @@ metadata:
   labels:
     app: minio
 spec:
-  type: loadBalancer
+  type: LoadBalancer
   ports:
     - port: 9000
       targetPort: 9000
