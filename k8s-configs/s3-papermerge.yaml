@@ -8,12 +8,23 @@ stringData:
   AWS_SECRET_ACCESS_KEY: a503071debfa3ac0c1de1cd79f
   AWS_REGION_NAME: us-east-1
   AWS_S3_ENDPOINT: http://paperless-minio:9000
-  PAPERMERGE_DATABASE_URL: postgresql://papermerge:pmg-secret@papermerge-database:5432/papermerge
-  PAPERMERGE_MAIN_MEDIA_ROOT: /var/media/pmg
-  PAPERMERGE_REDIS_URL: redis://papermerge-redis:6379/0
-  PAPERMERGE_S3_WORKER_S3_BUCKET_NAME: papermerge
-  ARGS: "-Q s3,s3preview -c 2"
+  PAPERMERGE__DATABASE__URL: postgresql://papermerge:pmg-secret@papermerge-database:5432/papermerge
+  PAPERMERGE__MAIN__MEDIA_ROOT: /var/media/pmg
+  PAPERMERGE__REDIS__URL: redis://papermerge-redis:6379/0
+  PAPERMERGE__S3__BUCKET_NAME: papermerge
+  S3_WORKER_ARGS: "-Q s3,s3preview -c 2"
+---
 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: s3-media-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 ---
 
 apiVersion: apps/v1
@@ -42,33 +53,6 @@ spec:
       volumes:
         - name: media-storage
           persistentVolumeClaim:
-            claimName: s3-media-pvc
----
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: s3-media-pv
-spec:
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: standard
-  hostPath:
-    path: /mnt/data/papermerge-media
+            claimName: s3-media-pv
 
 ---
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: s3-media-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 2Gi
-  storageClassName: standard 

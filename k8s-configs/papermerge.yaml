@@ -5,14 +5,14 @@ metadata:
   name: papermerge-secret
 type: Opaque
 stringData:
-  PAPERMERGE_AUTH_USERNAME: admin
-  PAPERMERGE_AUTH_PASSWORD: secret
-  PAPERMERGE_DATABASE_URL: postgresql://papermerge:pmg-secret@papermerge-database:5432/papermerge
-  PAPERMERGE_MAIN_MEDIA_ROOT: /var/media/pmg
-  OCR_LANG_CODES: "eng,fra"
-  PAPERMERGE_OCR_DEFAULT_LANG_CODE: "eng"
-  PAPERMERGE_REDIS_URL: redis://papermerge-redis:6379/0
-  PAPERMERGE_SECURITY_SECRET_KEY: 8aa9127e904324e1d93c2b68483a327c3b5be964dd161e3e4df8dbca0443ec21
+  PAPERMERGE__AUTH__USERNAME: admin
+  PAPERMERGE__AUTH__PASSWORD: secret
+  PAPERMERGE__DATABASE__URL: postgresql://papermerge:pmg-secret@papermerge-database:5432/papermerge
+  PAPERMERGE__MAIN__MEDIA_ROOT: /var/media/pmg
+  PAPERMERGE__OCR__LANG_CODES: "eng,fra"
+  PAPERMERGE__OCR__DEFAULT_LANG_CODE: "eng"
+  PAPERMERGE__REDIS__URL: redis://papermerge-redis:6379/0
+  PAPERMERGE__SECURITY__SECRET_KEY: 8aa9127e904324e1d93c2b68483a327c3b5be964dd161e3e4df8dbca0443ec21
 ---
 
 apiVersion: apps/v1
@@ -45,7 +45,7 @@ spec:
       volumes:
         - name: media-storage
           persistentVolumeClaim:
-            claimName: papermerge-media-pvc
+            claimName: s3-media-pv
 ---
 
 apiVersion: v1
@@ -56,36 +56,12 @@ metadata:
     app: papermerge
 spec:
   type: LoadBalancer
-  ports:
-    - port: 8081
-      targetPort: 80
   selector:
     app: papermerge
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 80
 
---- 
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: papermerge-media-pvc
-spec:
-  capacity:
-    storage: 3Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: "/mnt/data" 
 
 ---
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: papermerge-media-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 3Gi

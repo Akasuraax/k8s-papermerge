@@ -8,6 +8,18 @@ stringData:
   MINIO_ROOT_PASSWORD: a503071debfa3ac0c1de1cd79f
 ---
 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,16 +46,17 @@ spec:
             - secretRef:
                 name: minio-secret
           args:
-            - server
+            - "server"
             - "--console-address"
             - ":9001"
-            - /data
+            - "/data"
           volumeMounts:
             - name: minio-data
               mountPath: /data
       volumes:
         - name: minio-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: minio-pvc
 
 ---
 apiVersion: v1
