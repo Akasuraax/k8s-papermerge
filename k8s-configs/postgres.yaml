@@ -5,7 +5,7 @@ metadata:
 type: Opaque
 stringData: 
   POSTGRES_DB: papermerge
-  POSTGRES_HOST: postgres
+  POSTGRES_USER: papermerge
   POSTGRES_PASSWORD: pmg-secret
 
 ---
@@ -26,7 +26,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: papermerge-postgres
 spec:
   replicas: 2
   selector:
