@@ -22,7 +22,7 @@ metadata:
   labels:
     app: papermerge
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: papermerge
@@ -60,7 +60,7 @@ spec:
     app: papermerge
   ports:
     - protocol: TCP
-      port: 8083
+      port: 8086
       targetPort: 80
 
 

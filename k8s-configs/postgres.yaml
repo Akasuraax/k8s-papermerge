@@ -28,7 +28,7 @@ kind: Deployment
 metadata:
   name: papermerge-postgres
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: papermerge-postgres
@@ -38,7 +38,7 @@ spec:
         app: papermerge-postgres
     spec:
       containers:
-        - name: papermerge-postgres
+        - name: postgres
           image: postgres:17-alpine
           ports:
             - containerPort: 5432
@@ -62,7 +62,6 @@ spec:
   selector:
       app: papermerge-postgres
   ports:
-    - name: postgres
-      protocol: TCP
+    - protocol: TCP
       port: 5432
       targetPort: 5432

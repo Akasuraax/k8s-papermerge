@@ -32,7 +32,7 @@ kind: Deployment
 metadata:
   name: papermerge-s3worker
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: papermerge-s3worker
